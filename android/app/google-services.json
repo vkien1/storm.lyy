@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "423718442119",
+    "project_id": "stormly-7216e",
+    "storage_bucket": "stormly-7216e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423718442119:android:8f436045c30f5b4aa65422",
+        "android_client_info": {
+          "package_name": "com.example.stormly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBamuSgYLaoBcbwR9EEh5iuwrOsLUQz8tE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
