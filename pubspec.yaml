@@ -8,9 +8,13 @@ environment:
 
 dependencies:
   cloud_firestore: ^4.16.1
+  firebase_auth: ^4.19.1
   firebase_core: ^2.29.0
   flutter:
     sdk: flutter
+  google_fonts: ^6.2.1
+  provider: ^6.1.2
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -18,4 +22,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
 
 flutter:
+  assets:
+    - assets/images/
+
   uses-material-design: true

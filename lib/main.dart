@@ -1,25 +1,57 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:stormly/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:stormly/screens/second_screen.dart';
+import 'package:stormly/screens/third_screen.dart';
+import 'firebase_options.dart';
+import 'screens/login_screen.dart';
+import 'screens/swipe_navigation_screen.dart';
+import 'theme_provider.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ); 
-  runApp(const MainApp());
+  );
+  runApp(MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(
+        ThemeData(
+          brightness: Brightness.light,
+          primaryColor: Colors.blue[800],
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            color: Colors.blue[800],
+            foregroundColor: Colors.white,
+          ),
+          textTheme: TextTheme(
+            bodyText2: TextStyle(color: Colors.blue[800]),
+          ),
         ),
+      ),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Flutter Task Manager',
+            theme: themeProvider.getTheme, 
+            initialRoute: '/',
+            routes: {
+              '/': (context) => LoginScreen(),
+              '/homepage': (context) => SwipeNavigationScreen(), 
+              '/login': (context) => LoginScreen(),
+              '/second': (context) => SecondScreen(),
+              '/third': (context) => ThirdScreen(),
+              /*
+              '/settings': (context) => SettingsScreen(),
+              */
+            },
+          );
+        },
       ),
     );
   }
