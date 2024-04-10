@@ -1,3 +1,3 @@
 # stormly
 
-A new Flutter project.
+our weather app project for mobile dev :D
