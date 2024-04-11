@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:provider/provider.dart';
+import 'widgets/theme_provider.dart';
+//screens
+import 'widgets/swipe_navigation_screen.dart';
+import 'screens/login_screen.dart';
 import 'package:stormly/screens/second_screen.dart';
 import 'package:stormly/screens/third_screen.dart';
-import 'firebase_options.dart';
-import 'screens/login_screen.dart';
-import 'screens/swipe_navigation_screen.dart';
-import 'theme_provider.dart';
+import 'package:stormly/screens/map_screen.dart';
+//screens
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,15 +26,29 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeProvider(
         ThemeData(
           brightness: Brightness.light,
-          primaryColor: Colors.blue[800],
+          primarySwatch: Colors.grey,
+          primaryColor: Colors.white,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: AppBarTheme(
-            color: Colors.blue[800],
-            foregroundColor: Colors.white,
+            color: Colors.white,
+            foregroundColor: Colors.grey[600],
+            elevation: 0, 
+          ),
+          bottomAppBarColor: Colors.white,
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.grey[600],
           ),
           textTheme: TextTheme(
-            bodyText2: TextStyle(color: Colors.blue[800]),
+            bodyText2: TextStyle(color: Colors.grey[600]),
           ),
+          iconTheme: IconThemeData(
+            color: Colors.grey[600],
+          ),
+          primaryIconTheme: IconThemeData(
+            color: Colors.grey[600],
+          ),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
       ),
       child: Consumer<ThemeProvider>(
@@ -46,9 +63,7 @@ class MyApp extends StatelessWidget {
               '/login': (context) => LoginScreen(),
               '/second': (context) => SecondScreen(),
               '/third': (context) => ThirdScreen(),
-              /*
-              '/settings': (context) => SettingsScreen(),
-              */
+              '/map': (context) => MapScreen(),
             },
           );
         },
