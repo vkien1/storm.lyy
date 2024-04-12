@@ -58,6 +58,14 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    buildTypes {
+        debug {
+            resValue "string", "open_weather_map_api_key", "\"86c7a0641be5b0591c1c8f1bd926055d\""
+        }
+        release {
+            resValue "string", "open_weather_map_api_key", "\"86c7a0641be5b0591c1c8f1bd926055d\""
+        }
+    }
 }
 
 flutter {
