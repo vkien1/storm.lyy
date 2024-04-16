@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -18,14 +20,14 @@ class ThemeProvider extends ChangeNotifier {
               color: Colors.grey[900],
               foregroundColor: Colors.white,
             ),
-            bottomAppBarColor: Colors.grey[800],
             floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: Colors.grey[800],
               foregroundColor: Colors.white,
             ),
             textTheme: TextTheme(
-              bodyText2: TextStyle(color: Colors.white),
+              bodyMedium: TextStyle(color: Colors.white),
             ),
+            bottomAppBarTheme: BottomAppBarTheme(color: Colors.grey[800]),
           )
         : ThemeData(
             brightness: Brightness.light,
@@ -37,14 +39,12 @@ class ThemeProvider extends ChangeNotifier {
               foregroundColor: Colors.grey[600],
               elevation: 0,
             ),
-            bottomAppBarColor: Colors.white,
             floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: Colors.white,
               foregroundColor: Colors.grey[600],
             ),
             textTheme: TextTheme(
-              bodyText2:
-              TextStyle(color: Colors.grey[600]),
+              bodyMedium: TextStyle(color: Colors.grey[600]),
             ),
             iconTheme: IconThemeData(
               color: Colors.grey[600],
@@ -53,6 +53,7 @@ class ThemeProvider extends ChangeNotifier {
               color: Colors.grey[600],
             ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
+            bottomAppBarTheme: BottomAppBarTheme(color: Colors.white),
           );
     notifyListeners();
   }
