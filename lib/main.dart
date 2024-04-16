@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:stormly/screens/settings_screen.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'widgets/theme_provider.dart';
@@ -32,15 +35,14 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(
             color: Colors.white,
             foregroundColor: Colors.grey[600],
-            elevation: 0, 
+            elevation: 0,
           ),
-          bottomAppBarColor: Colors.white,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: Colors.white,
             foregroundColor: Colors.grey[600],
           ),
           textTheme: TextTheme(
-            bodyText2: TextStyle(color: Colors.grey[600]),
+            bodyMedium: TextStyle(color: Colors.grey[600]),
           ),
           iconTheme: IconThemeData(
             color: Colors.grey[600],
@@ -49,21 +51,23 @@ class MyApp extends StatelessWidget {
             color: Colors.grey[600],
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          bottomAppBarTheme: BottomAppBarTheme(color: Colors.white),
         ),
       ),
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
             title: 'Flutter Task Manager',
-            theme: themeProvider.getTheme, 
+            theme: themeProvider.getTheme,
             initialRoute: '/',
             routes: {
               '/': (context) => LoginScreen(),
-              '/homepage': (context) => SwipeNavigationScreen(), 
+              '/homepage': (context) => SwipeNavigationScreen(),
               '/login': (context) => LoginScreen(),
               '/second': (context) => SecondScreen(),
               '/third': (context) => ThirdScreen(),
               '/map': (context) => MapScreen(),
+              '/setting': (context) => SettingsScreen(),
             },
           );
         },

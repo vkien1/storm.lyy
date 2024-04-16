@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -5,7 +7,7 @@ import 'package:weather/weather.dart';
 import 'package:stormly/widgets/forecast_provider.dart'; 
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({super.key});
 
   @override
   State<MapScreen> createState() => MapScreenState();
@@ -104,6 +106,7 @@ class MapScreenState extends State<MapScreen> {
     );
   }
 
+  // cylce from normal, satellitle and hybrid map layot
   Widget _buildMapTypeSelector() {
     return Positioned(
       top: 50.0,

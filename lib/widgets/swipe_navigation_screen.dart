@@ -1,8 +1,9 @@
-// ignore_for_file: sort_child_properties_last
+// ignore_for_file: sort_child_properties_last, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_final_fields, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:stormly/screens/home_screen.dart';
 import 'package:stormly/screens/second_screen.dart';
+import 'package:stormly/screens/settings_screen.dart';
 import 'package:stormly/screens/third_screen.dart';
 import 'package:stormly/screens/map_screen.dart';
 
@@ -24,7 +25,7 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true, 
+      extendBody: true,
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -35,7 +36,7 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
         children: _screens,
       ),
       bottomNavigationBar: BottomAppBar(
-        elevation: 0, 
+        elevation: 0,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
           child: Row(
@@ -63,8 +64,8 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentIndex == index
-                          ? Colors.white 
-                          : Color.fromARGB(255, 83, 83, 83), 
+                          ? Colors.white
+                          : Color.fromARGB(255, 83, 83, 83),
                     ),
                   );
                 }),
@@ -72,16 +73,20 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
               IconButton(
                 icon: Icon(
                   Icons.settings,
-                  color: Colors.white, 
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   // Handle settings button press
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsScreen()),
+                  );
                 },
               ),
             ],
           ),
         ),
-        color: Colors.blueGrey.withOpacity(0.9), 
+        color: Colors.blueGrey.withOpacity(0.9),
         shape: CircularNotchedRectangle(),
       ),
     );
