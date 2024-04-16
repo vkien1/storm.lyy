@@ -16,6 +16,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Controllers for text fields 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -23,16 +25,18 @@ class _LoginScreenState extends State<LoginScreen> {
   String _errorMessage = '';
   double _backgroundPosition = 0;
 
+// State variables to toggle between sign up and sign in views and to handle errors
   @override
   void initState() {
     super.initState();
   }
 
-  
+  // Widget build method to create UI elements
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
+    // Color Scheme Setup 
     Color primaryColor = Colors.blue[800]!; 
     Color accentColor = Colors.white;
 
@@ -45,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
             left: -_backgroundPosition,
             right: -_backgroundPosition,
             bottom: -_backgroundPosition,
+            // Background image
             child: Image.asset(
               'assets/images/background.png', 
               fit: BoxFit.cover,
@@ -57,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    // App title
                     Text(
                       'STORM.LY',
                       style: GoogleFonts.permanentMarker(
@@ -67,14 +73,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
+                    // Icon below the title
                     Icon(
                       Icons.thunderstorm_outlined,
                       color: Colors.blue[800],
                       size: 50.0,
                     ),
                     SizedBox(height: 20),
+                    // Conditionally display username field
                     if (_isSignUp) _buildTextField(_usernameController, 'Username', primaryColor, accentColor),
                     SizedBox(height: _isSignUp ? 10 : 0),
+                    // Email and password fields
                     _buildTextField(_emailController, 'Email', primaryColor, accentColor),
                     SizedBox(height: 10),
                     _buildTextField(_passwordController, 'Password', primaryColor, accentColor, isPassword: true),
@@ -88,6 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
+                      // Sign in/up button. 
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
@@ -96,6 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () => _isSignUp ? _signUp() : _signIn(),
                       child: Text(_isSignUp ? 'Sign Up' : 'Login'),
                     ),
+                    // Toggle between sign in and sign up views
                     TextButton(
                       onPressed: () {
                         setState(() {
@@ -117,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
+// Helper function to create text fields
   TextField _buildTextField(TextEditingController controller, String labelText, Color primaryColor, Color accentColor, {bool isPassword = false}) {
     return TextField(
       controller: controller,
@@ -139,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
+// Function to handle sign in
   void _signIn() async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
@@ -155,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
   }
-
+ // Function to handle sign up
   void _signUp() async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
