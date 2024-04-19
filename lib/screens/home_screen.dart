@@ -85,22 +85,39 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             // Display Current Location Weather Widget
-
-            //city name
-            Text(_weather?.cityName ?? "loading city.."),
-
-            //temperature
-            Text('${_weather?.temperature.round()}°C'),
-
+            _buildDecoratedWidget(
+              Column(
+                children: [
+                  // City name
+                  Text(
+                    _weather?.cityName ?? "loading city..",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // Temperature
+                  Text(
+                    '${_weather?.temperature.round()}°C',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              ThemeData(),
+            ),
             // Display Hourly Weather Forecast Graph
             _buildDecoratedWidget(
-                _buildHourlyWeatherForecastGraph(), ThemeData()),
+              _buildHourlyWeatherForecastGraph(),
+              ThemeData(),
+            ),
           ],
         ),
       ),
     );
   }
-
   // ignore: camel_case_types
 
   Widget _buildDecoratedWidget(Widget child, ThemeData themeData) {
