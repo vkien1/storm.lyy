@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:stormly/screens/settings_screen.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'widgets/theme_provider.dart';
 //screens
+import 'package:stormly/screens/settings_screen.dart';
 import 'widgets/swipe_navigation_screen.dart';
 import 'screens/login_screen.dart';
 import 'package:stormly/screens/second_screen.dart';
