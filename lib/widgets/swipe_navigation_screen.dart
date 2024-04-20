@@ -35,6 +35,11 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
         },
         children: _screens,
       ),
+
+      // TODO
+      // consider making this a the hamburger and moving the map button to maybe
+      // the fourth screen and adding it to the hamburger selectable widgets 
+      
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
         child: Padding(

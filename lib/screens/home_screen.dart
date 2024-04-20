@@ -1,9 +1,11 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'dart:math';
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:stormly/consts.dart';
+import 'package:stormly/models/weather_model.dart';
+import 'package:stormly/service/weather_service.dart';
+// Import the Weather API utility
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,6 +13,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // import api key from conts from lib
+  final _weatherSevice = WeatherService(OPENWEATHER_API_KEY);
+  MyWeather? _weather;
+
   int _currentPageIndex = 0;
   Position? _currentPosition;
 
@@ -23,7 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    // inital sate of weather fetch
     _getCurrentLocation();
+    _fetchWeather();
   }
 
   Future<void> _getCurrentLocation() async {
@@ -38,6 +47,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // fetch weather
+  _fetchWeather() async {
+    //get the current city
+    String cityName = await _weatherSevice.getCurrentCity();
+
+    // get weather
+    try {
+      final weather = await _weatherSevice.getWeather(cityName);
+      setState(() {
+        _weather = weather;
+      });
+    }
+    // error catcher casue ill know ill mess up lol , like alawys
+    catch (e) {
+      print(e);
+    }
+  }
+  //weather animations
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Welcome Text
             Text(
@@ -55,23 +84,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            //Display welcome message before displaying weather widgets
-            _buildDecoratedWidget(_buildWelcomeMessage(), ThemeData()),
             // Display Current Location Weather Widget
             _buildDecoratedWidget(
-                _buildCurrentLocationWeatherWidget(), ThemeData()),
+              Column(
+                children: [
+                  // City name
+                  Text(
+                    _weather?.cityName ?? "loading city..",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // Temperature
+                  Text(
+                    '${_weather?.temperature.round()}°C',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              ThemeData(),
+            ),
             // Display Hourly Weather Forecast Graph
             _buildDecoratedWidget(
-                _buildHourlyWeatherForecastGraph(), ThemeData()),
+              _buildHourlyWeatherForecastGraph(),
+              ThemeData(),
+            ),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildWelcomeMessage() {
-    return Container();
-  }
+  // ignore: camel_case_types
 
   Widget _buildDecoratedWidget(Widget child, ThemeData themeData) {
     final Color backgroundColor = themeData.scaffoldBackgroundColor;
@@ -93,12 +140,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCurrentLocationWeatherWidget() {
-    // Implement your UI for displaying current location weather here
-    // You can use _currentPosition.latitude and _currentPosition.longitude to fetch weather data
-    return Container(
-        // Your UI components here
-        );
+  // Function to get the appropriate weather icon based on the weather phenomenon
+  IconData getWeatherIcon(String phenomenon) {
+    // You can define your own logic to map weather phenomenon to icons
+    // For demonstration purposes, I'm returning a generic weather icon
+    return Icons.wb_sunny;
   }
 
   Widget _buildHourlyWeatherForecastGraph() {
