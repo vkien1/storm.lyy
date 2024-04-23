@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stormly/consts.dart';
+// Import the Weather API utility
+import 'package:geolocator/geolocator.dart';
 import 'package:stormly/models/weather_model.dart';
 import 'package:stormly/service/weather_service.dart';
-// Import the Weather API utility
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -64,7 +65,40 @@ class _HomeScreenState extends State<HomeScreen> {
       print(e);
     }
   }
+
   //weather animations
+  String getWeatherAnimation(String? mainCondition) {
+    //defualt native to sunny
+    if (mainCondition == null) return 'assets/sunny.json';
+
+    // refractor with better animations for cases
+    switch (mainCondition.toLowerCase()) {
+      case 'clouds':
+        return 'assets/sunnycloudy.json';
+      case 'mist':
+        return 'assets/windy.json';
+      case 'smoke':
+        return 'assets/windy.json';
+      case 'haze':
+        return 'assets/windy.json';
+      case 'dust':
+        return 'assets/windy.json';
+      case 'fog':
+        return 'assets/cloudy(night).json';
+      case 'rain':
+        return 'assets/sotrm&showers(day).json';
+      case 'drizzle':
+        return 'assets/rainy(night).json';
+      case 'shower rain':
+        return 'assets/partlyshower.json';
+      case 'thunderstorm':
+        return 'assets/storm&showers(day).json';
+      case 'clear':
+        return 'assets/sunnylightcloudy.json';
+      default:
+        return 'assets/sunnycloudy.json';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +130,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  // animation weather phenomenon
+                  Lottie.asset(getWeatherAnimation(_weather?.mainCondition)),
+
                   // Temperature
                   Text(
                     '${_weather?.temperature.round()}°C',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // condition weather phenomenon
+                  Text(
+                    _weather?.mainCondition ?? "",
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
