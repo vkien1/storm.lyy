@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String getWeatherAnimation(String? mainCondition) {
     //defualt native to sunny
     if (mainCondition == null) return 'assets/sunny.json';
-
+    // TODO
     // refractor with better animations for cases
     switch (mainCondition.toLowerCase()) {
       case 'clouds':
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 'fog':
         return 'assets/cloudy(night).json';
       case 'rain':
-        return 'assets/sotrm&showers(day).json';
+        return 'assets/storm&showers(day).json';
       case 'drizzle':
         return 'assets/rainy(night).json';
       case 'shower rain':
@@ -153,6 +153,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ThemeData(),
             ),
+            Text(
+              "This weeks weather phenomenon",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             // Display Hourly Weather Forecast Graph
             _buildDecoratedWidget(
               _buildHourlyWeatherForecastGraph(),
@@ -183,13 +190,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: child,
       ),
     );
-  }
-
-  // Function to get the appropriate weather icon based on the weather phenomenon
-  IconData getWeatherIcon(String phenomenon) {
-    // You can define your own logic to map weather phenomenon to icons
-    // For demonstration purposes, I'm returning a generic weather icon
-    return Icons.wb_sunny;
   }
 
   Widget _buildHourlyWeatherForecastGraph() {
