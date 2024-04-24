@@ -14,8 +14,8 @@ class ThemeProvider extends ChangeNotifier {
         ? ThemeData(
             brightness: Brightness.dark,
             primarySwatch: Colors.grey,
-            primaryColor: Colors.grey[900], // Dark grey
-            scaffoldBackgroundColor: Colors.grey[850],
+            primaryColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
             appBarTheme: AppBarTheme(
               color: Colors.grey[900],
               foregroundColor: Colors.white,
@@ -25,9 +25,9 @@ class ThemeProvider extends ChangeNotifier {
               foregroundColor: Colors.white,
             ),
             textTheme: TextTheme(
-              bodyMedium: TextStyle(color: Colors.white),
+              bodyMedium: TextStyle(color: Colors.white), // Set text color to white
             ),
-            bottomAppBarTheme: BottomAppBarTheme(color: Colors.grey[800]),
+            bottomAppBarTheme: BottomAppBarTheme(color: Colors.white),
           )
         : ThemeData(
             brightness: Brightness.light,
@@ -36,21 +36,21 @@ class ThemeProvider extends ChangeNotifier {
             scaffoldBackgroundColor: Colors.white,
             appBarTheme: AppBarTheme(
               color: Colors.white,
-              foregroundColor: Colors.grey[600],
+              foregroundColor: Colors.white,
               elevation: 0,
             ),
             floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: Colors.white,
-              foregroundColor: Colors.grey[600],
+              foregroundColor: Colors.white,
             ),
             textTheme: TextTheme(
-              bodyMedium: TextStyle(color: Colors.grey[600]),
+              bodyMedium: TextStyle(color: Colors.white), // Set text color to white
             ),
             iconTheme: IconThemeData(
-              color: Colors.grey[600],
+              color: Colors.white,
             ),
             primaryIconTheme: IconThemeData(
-              color: Colors.grey[600],
+              color: Colors.white,
             ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
             bottomAppBarTheme: BottomAppBarTheme(color: Colors.white),
