@@ -75,4 +75,34 @@ class WeatherService {
       throw Exception('Failed to load forecast');
     }
   }
+
+  // Method to parse forecast data into list of MyWeather objects
+  List<MyWeather> _parseForecast(dynamic forecastData) {
+    List<MyWeather> forecastList = [];
+
+    // Extract forecast list from JSON data
+    List<dynamic> forecastItems = forecastData['list'];
+
+    // Iterate through each forecast item
+    for (var item in forecastItems) {
+      // Extract relevant information
+      int timestamp = item['dt'];
+      double temperature = item['main']['temp'];
+      String mainCondition = item['weather'][0]['main'];
+      DateTime dateTime =
+          DateTime.fromMillisecondsSinceEpoch(timestamp * 10000);
+
+      // Create a MyWeather object and add it to the forecast list
+      MyWeather weather = MyWeather(
+        time: dateTime,
+        temperature: temperature,
+        // feelsLike: feelsLike,
+
+        mainCondition: mainCondition, cityName: '',
+      );
+      forecastList.add(weather);
+    }
+
+    return forecastList;
+  }
 }

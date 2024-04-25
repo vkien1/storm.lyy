@@ -94,7 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
       double temperature = item['main']['temp'];
       String mainCondition = item['weather'][0]['main'];
 
-      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 100);
+      DateTime dateTime =
+          DateTime.fromMillisecondsSinceEpoch(timestamp * 10000);
 
       // Create a MyWeather object and add it to the forecast list
       MyWeather weather = MyWeather(
