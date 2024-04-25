@@ -1,6 +1,7 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_constructors_in_immutables
 
 import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -13,6 +14,13 @@ import 'package:stormly/models/weather_model.dart';
 import 'package:stormly/service/weather_service.dart';
 
 class ThirdScreen extends StatefulWidget {
+  final String
+      cityName1; // Add cityName as a parameter to the SecondScreen constructor
+
+  ThirdScreen(
+      {super.key,
+      required this.cityName1}); // Constructor with required parameter
+
   @override
   State<ThirdScreen> createState() => _ThirdScreenState();
 }
@@ -20,21 +28,19 @@ class ThirdScreen extends StatefulWidget {
 class _ThirdScreenState extends State<ThirdScreen> {
   // import api key from conts from lib
   final _weatherSevice = WeatherService(OPENWEATHER_API_KEY);
-
-  TextEditingController _cityController = TextEditingController();
-
+  final TextEditingController _cityController = TextEditingController();
   MyWeather? _weather;
-  String _savedCityNameTwo = '';
+  // String _cityName = _cityName;
   bool _isLoading = true;
 
   Position? _currentPosition;
 
-  // int _currentPageIndex = 0;
-  // void _setPageIndex(int index) {
-  //   setState(() {
-  //     _currentPageIndex = index;
-  //   });
-  // }
+  int _currentPageIndex = 0;
+  void _setPageIndex(int index) {
+    setState(() {
+      _currentPageIndex = index;
+    });
+  }
 
   @override
   void initState() {
@@ -42,27 +48,14 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
     // inital state of weather fetch
     _loadWeatherData();
-
-    // _getCurrentLocation
-    // _fetchWeather();
-  }
-
-  // Determine background image based on time of day
-  String getBackgroundImage() {
-    var hour = DateTime.now().hour;
-    return hour >= 6 && hour < 18
-        ? 'assets/images/background.png'
-        : 'assets/images/background2.png';
   }
 
   void _loadWeatherData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedCity = prefs.getString('savedCity');
     if (savedCity != null) {
-      setState(() {
-        _savedCityNameTwo = savedCity;
-      });
       _fetchWeatherByCity(savedCity);
+      _cityController.text = savedCity;
     }
   }
 
@@ -80,30 +73,13 @@ class _ThirdScreenState extends State<ThirdScreen> {
   // }
 
   // fetch weather
-  Future<void> _fetchWeather(double latitude, double longitude) async {
-    //TODO modify to set current city instead of retriving what city we are at
-    String cityName = await _weatherSevice.getCurrentCity();
 
-    // get weather
-    try {
-      final weather =
-          await _weatherSevice.getWeatherByLocation(latitude, longitude);
-      setState(() {
-        _weather = weather;
-      });
-    }
-    // error catcher casue ill know ill mess up lol , like alawys
-    catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _fetchWeatherByCity(String cityName) async {
+  Future<void> _fetchWeatherByCity(String cityName1) async {
     setState(() {
       _isLoading = true;
     });
     try {
-      final weather = await _weatherSevice.getWeather(cityName);
+      final weather = await _weatherSevice.getWeather(cityName1);
       setState(() {
         _weather = weather;
         _isLoading = false;
@@ -111,14 +87,13 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
       // saved the city for future use
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('savedCity', cityName);
+      prefs.setString('savedCity', cityName1);
     } catch (e) {
       print(e);
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _savedCityNameTwo = cityName;
-      _isLoading = false;
-    });
   }
 
   //weather animations
@@ -155,13 +130,21 @@ class _ThirdScreenState extends State<ThirdScreen> {
     }
   }
 
+  // Determine background image based on time of day
+  String getBackgroundImage() {
+    var hour = DateTime.now().hour;
+    return hour >= 6 && hour < 18
+        ? 'assets/images/background.png'
+        : 'assets/images/background2.png';
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Storm.lyy: $_savedCityNameTwo'),
+        title: Text('Storm.lyy: ${widget.cityName1}'),
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -228,20 +211,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
                             ),
                             ThemeData(),
                           )
-                        : Container(), // Weather Details
-                // 5 day forecast
-                // Text(
-                //   "This week's weather phenomenon",
-                //   style: TextStyle(
-                //     fontSize: 24,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
-                // // Display Hourly Weather Forecast Graph
-                // _buildDecoratedWidget(
-                //   _buildHourlyWeatherForecastGraph(),
-                //   ThemeData(),
-                // ),
+                        : Container(),
               ],
             ),
           ),

@@ -30,8 +30,12 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    SecondScreen(),
-    ThirdScreen(),
+    SecondScreen(
+      cityName: '',
+    ),
+    ThirdScreen(
+      cityName1: '',
+    ),
   ];
 
   @override
