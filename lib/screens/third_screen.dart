@@ -1,8 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
-<<<<<<< HEAD
 
 import 'dart:async';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,8 +20,10 @@ class ThirdScreen extends StatefulWidget {
 class _ThirdScreenState extends State<ThirdScreen> {
   // import api key from conts from lib
   final _weatherSevice = WeatherService(OPENWEATHER_API_KEY);
-  MyWeather? _weather;
+
   TextEditingController _cityController = TextEditingController();
+
+  MyWeather? _weather;
   String _savedCityNameTwo = '';
   bool _isLoading = true;
 
@@ -44,6 +45,14 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
     // _getCurrentLocation
     // _fetchWeather();
+  }
+
+  // Determine background image based on time of day
+  String getBackgroundImage() {
+    var hour = DateTime.now().hour;
+    return hour >= 6 && hour < 18
+        ? 'assets/images/background.png'
+        : 'assets/images/background2.png';
   }
 
   void _loadWeatherData() async {
@@ -144,15 +153,6 @@ class _ThirdScreenState extends State<ThirdScreen> {
       default:
         return 'assets/sunnycloudy.json';
     }
-=======
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-class ThirdScreen extends StatelessWidget {
-  // Determine background image based on time of day
-  String getBackgroundImage() {
-    var hour = DateTime.now().hour;
-    return hour >= 6 && hour < 18 ? 'assets/images/background.png' : 'assets/images/background2.png';
->>>>>>> main
   }
 
   @override
@@ -160,72 +160,9 @@ class ThirdScreen extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     return Scaffold(
-<<<<<<< HEAD
       appBar: AppBar(
         title: Text('Storm.lyy: $_savedCityNameTwo'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // City Input Field
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _cityController,
-                decoration: InputDecoration(
-                  labelText: 'Enter City Name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            // Search Button
-            ElevatedButton(
-              onPressed: () {
-                _fetchWeatherByCity(_cityController.text);
-              },
-              child: Text('Search'),
-            ),
-            SizedBox(height: 20),
-            // Weather Details or Loading Widget
-            _isLoading
-                ? CircularProgressIndicator() // Loading Widget
-                : _weather != null
-                    ? _buildDecoratedWidget(
-                        Column(
-                          children: [
-                            Text(
-                              _weather!.cityName,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Lottie.asset(
-                                getWeatherAnimation(_weather!.mainCondition)),
-                            Text(
-                              '${_weather!.temperature.round()}°C',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              _weather!.mainCondition,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        ThemeData(),
-                      )
-                    : Container(), // Weather Details
-            // 5 day forecast
-            Text(
-              "This week's weather phenomenon",
-=======
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -234,27 +171,81 @@ class ThirdScreen extends StatelessWidget {
             getBackgroundImage(),
             fit: BoxFit.cover,
           ),
-          Center(
-            child: Text(
-              'Welcome to the Third Screen!',
->>>>>>> main
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // City Input Field
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _cityController,
+                    decoration: InputDecoration(
+                      labelText: 'Enter City Name',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                // Search Button
+                ElevatedButton(
+                  onPressed: () {
+                    _fetchWeatherByCity(_cityController.text);
+                  },
+                  child: Text('Search'),
+                ),
+                SizedBox(height: 20),
+                // Weather Details or Loading Widget
+                _isLoading
+                    ? CircularProgressIndicator() // Loading Widget
+                    : _weather != null
+                        ? _buildDecoratedWidget(
+                            Column(
+                              children: [
+                                Text(
+                                  _weather!.cityName,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Lottie.asset(getWeatherAnimation(
+                                    _weather!.mainCondition)),
+                                Text(
+                                  '${_weather!.temperature.round()}°C',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  _weather!.mainCondition,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            ThemeData(),
+                          )
+                        : Container(), // Weather Details
+                // 5 day forecast
+                Text(
+                  "This week's weather phenomenon",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // Display Hourly Weather Forecast Graph
+                _buildDecoratedWidget(
+                  _buildHourlyWeatherForecastGraph(),
+                  ThemeData(),
+                ),
+              ],
             ),
-<<<<<<< HEAD
-            // Display Hourly Weather Forecast Graph
-            _buildDecoratedWidget(
-              _buildHourlyWeatherForecastGraph(),
-              ThemeData(),
-            ),
-          ],
-        ),
-=======
           ),
         ],
->>>>>>> main
       ),
     );
   }

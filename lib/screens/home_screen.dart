@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stormly/consts.dart';
@@ -66,11 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // Get weather animation based on condition
   String getWeatherAnimation(String? mainCondition) {
     if (mainCondition == null) return 'assets/sunny.json';
-<<<<<<< HEAD
-    // TODO
-    // refractor with better animations for cases
-=======
->>>>>>> main
     switch (mainCondition.toLowerCase()) {
       case 'clouds':
         return 'assets/sunnycloudy.json';
@@ -163,12 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       // Animation weather phenomenon
                       if (_weather?.mainCondition != null)
-                        Lottie.asset(getWeatherAnimation(_weather!.mainCondition)),
+                        Lottie.asset(
+                            getWeatherAnimation(_weather!.mainCondition)),
                       // Temperature
                       Text(
                         _weather?.temperature != null
-                          ? '${(_weather!.temperature.round() * 1.8 + 32).round()}°F'
-                          : 'loading temp...',  // Placeholder text
+                            ? '${(_weather!.temperature.round() * 1.8 + 32).round()}°F'
+                            : 'loading temp...', // Placeholder text
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -191,32 +188,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 // ...other widgets
               ],
             ),
-<<<<<<< HEAD
-            Text(
-              "This weeks weather phenomenon",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // Display Hourly Weather Forecast Graph
-            _buildDecoratedWidget(
-              _buildHourlyWeatherForecastGraph(),
-              ThemeData(),
-            ),
-          ],
-        ),
-=======
           ),
         ],
->>>>>>> main
       ),
     );
   }
 
   // Widget for decorating a child widget with background and border
   Widget _buildDecoratedWidget(Widget child, ThemeData themeData) {
-    final Color backgroundColor = themeData.scaffoldBackgroundColor.withAlpha(230);
+    final Color backgroundColor =
+        themeData.scaffoldBackgroundColor.withAlpha(230);
     final Color borderColor = themeData.primaryColor;
 
     return Container(
@@ -231,15 +212,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-<<<<<<< HEAD
-=======
   // Get weather icon based on phenomenon
   IconData getWeatherIcon(String phenomenon) {
     return Icons.wb_sunny; // Placeholder icon
   }
 
   // Widget for hourly weather forecast graph
->>>>>>> main
   Widget _buildHourlyWeatherForecastGraph() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
