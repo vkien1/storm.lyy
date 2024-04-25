@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stormly/consts.dart';
@@ -184,8 +183,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ThemeData(),
                 ),
                 // Hourly Weather Forecast Graph
-                _buildHourlyWeatherForecastGraph(),
-                // ...other widgets
+                _buildDecoratedWidget(
+                  _buildHourlyWeatherForecastGraph(),
+                  ThemeData(),
+                ),
               ],
             ),
           ),

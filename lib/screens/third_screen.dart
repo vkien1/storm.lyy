@@ -230,18 +230,18 @@ class _ThirdScreenState extends State<ThirdScreen> {
                           )
                         : Container(), // Weather Details
                 // 5 day forecast
-                Text(
-                  "This week's weather phenomenon",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                // Display Hourly Weather Forecast Graph
-                _buildDecoratedWidget(
-                  _buildHourlyWeatherForecastGraph(),
-                  ThemeData(),
-                ),
+                // Text(
+                //   "This week's weather phenomenon",
+                //   style: TextStyle(
+                //     fontSize: 24,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // // Display Hourly Weather Forecast Graph
+                // _buildDecoratedWidget(
+                //   _buildHourlyWeatherForecastGraph(),
+                //   ThemeData(),
+                // ),
               ],
             ),
           ),

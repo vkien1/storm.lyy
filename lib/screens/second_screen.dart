@@ -146,6 +146,7 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
+  // Determine background image based on time of day
   String getBackgroundImage() {
     var hour = DateTime.now().hour;
     return hour >= 6 && hour < 18
@@ -161,79 +162,89 @@ class _SecondScreenState extends State<SecondScreen> {
       appBar: AppBar(
         title: Text('Storm.lyy: $_savedCityNameOne'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // City Input Field
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _cityController,
-                decoration: InputDecoration(
-                  labelText: 'Enter City Name',
-                  border: OutlineInputBorder(),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset(
+            getBackgroundImage(),
+            fit: BoxFit.cover,
+          ),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // City Input Field
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _cityController,
+                    decoration: InputDecoration(
+                      labelText: 'Enter City Name',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            // Search Button
-            ElevatedButton(
-              onPressed: () {
-                _fetchWeatherByCity(_cityController.text);
-              },
-              child: Text('Search'),
-            ),
-            SizedBox(height: 20),
-            // Weather Details or Loading Widget
-            _isLoading
-                ? CircularProgressIndicator() // Loading Widget
-                : _weather != null
-                    ? _buildDecoratedWidget(
-                        Column(
-                          children: [
-                            Text(
-                              _weather!.cityName,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                // Search Button
+                ElevatedButton(
+                  onPressed: () {
+                    _fetchWeatherByCity(_cityController.text);
+                  },
+                  child: Text('Search'),
+                ),
+                SizedBox(height: 20),
+                // Weather Details or Loading Widget
+                _isLoading
+                    ? CircularProgressIndicator() // Loading Widget
+                    : _weather != null
+                        ? _buildDecoratedWidget(
+                            Column(
+                              children: [
+                                Text(
+                                  _weather!.cityName,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Lottie.asset(getWeatherAnimation(
+                                    _weather!.mainCondition)),
+                                Text(
+                                  '${_weather!.temperature.round()}°C',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  _weather!.mainCondition,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Lottie.asset(
-                                getWeatherAnimation(_weather!.mainCondition)),
-                            Text(
-                              '${_weather!.temperature.round()}°C',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              _weather!.mainCondition,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        ThemeData(),
-                      )
-                    : Container(), // Weather Details
-            // 5 day forecast
-            Text(
-              "This week's weather phenomenon",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+                            ThemeData(),
+                          )
+                        : Container(), // Weather Details
+                // 5 day forecast
+                // Text(
+                //   "This week's weather phenomenon",
+                //   style: TextStyle(
+                //     fontSize: 24,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // Display Hourly Weather Forecast Graph
+                // _buildDecoratedWidget(
+                //   _buildHourlyWeatherForecastGraph(),
+                //   ThemeData(),
+                // ),
+              ],
             ),
-            // Display Hourly Weather Forecast Graph
-            _buildDecoratedWidget(
-              _buildHourlyWeatherForecastGraph(),
-              ThemeData(),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
