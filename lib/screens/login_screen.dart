@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_final_fields
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -16,37 +16,38 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _usernameController = TextEditingController();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   bool _isSignUp = false;
   String _errorMessage = '';
-  double _backgroundPosition = 0;
+
+  // Determine if it's day or night to select background image
+  String getBackgroundImage() {
+    var hour = DateTime.now().hour;
+    return hour >= 6 && hour < 18 ? 'assets/images/background.png' : 'assets/images/background2.png';
+  }
 
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   }
 
-  
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-
-    Color primaryColor = Colors.blue[800]!; 
+    Color primaryColor = Colors.blue[800]!;
     Color accentColor = Colors.white;
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Positioned(
-            top: -_backgroundPosition,
-            left: -_backgroundPosition,
-            right: -_backgroundPosition,
-            bottom: -_backgroundPosition,
+          Positioned.fill(
+            // Use the dynamic background based on time
             child: Image.asset(
-              'assets/images/background.png', 
+              getBackgroundImage(),
               fit: BoxFit.cover,
             ),
           ),
@@ -57,19 +58,35 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      'STORM.LY',
-                      style: GoogleFonts.permanentMarker(
-                        textStyle: TextStyle(
-                          fontSize: 60,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white,
-                        ),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'STORM.',
+                            style: GoogleFonts.permanentMarker(
+                              textStyle: TextStyle(
+                                fontSize: 60,
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'LY',
+                            style: GoogleFonts.permanentMarker(
+                              textStyle: TextStyle(
+                                fontSize: 60,
+                                fontStyle: FontStyle.italic,
+                                color: Colors.blue[800], // Set "LY" to blue
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Icon(
                       Icons.thunderstorm_outlined,
-                      color: Colors.blue[800],
+                      color: primaryColor,
                       size: 50.0,
                     ),
                     SizedBox(height: 20),

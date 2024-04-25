@@ -1,11 +1,12 @@
-// ignore_for_file: sort_child_properties_last, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_final_fields, prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui'; // Required for ImageFilter
+
 import 'package:stormly/screens/home_screen.dart';
 import 'package:stormly/screens/second_screen.dart';
-import 'package:stormly/screens/settings_screen.dart';
 import 'package:stormly/screens/third_screen.dart';
 import 'package:stormly/screens/map_screen.dart';
+// import 'package:stormly/screens/settings_screen.dart'; // This import is no longer needed.
 
 class SwipeNavigationScreen extends StatefulWidget {
   @override
@@ -15,6 +16,12 @@ class SwipeNavigationScreen extends StatefulWidget {
 class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
   PageController _pageController = PageController();
   int _currentIndex = 0;
+
+  // State variables for toggles.
+  bool home = false;
+  bool lockScreen = false;
+  bool notification = true;
+  bool statusBar = true;
 
   final List<Widget> _screens = [
     HomeScreen(),
@@ -35,65 +42,137 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
         },
         children: _screens,
       ),
-
-      // TODO
-      // consider making this a the hamburger and moving the map button to maybe
-      // the fourth screen and adding it to the hamburger selectable widgets 
-      
       bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
         elevation: 0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.map,
-                  color: Colors.white,
+        shape: CircularNotchedRectangle(),
+        child: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Opacity(
+              opacity: 0.7,
+              child: Container(
+                height: kToolbarHeight,
+                color: Colors.grey[900]?.withOpacity(0.5),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.map, color: Colors.white),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapScreen()),
+                          );
+                        },
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(_screens.length, (index) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _currentIndex == index
+                                  ? Colors.white
+                                  : Color.fromARGB(255, 83, 83, 83),
+                            ),
+                          );
+                        }),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.menu, color: Colors.white),
+                        onPressed: () {
+                          _showSettingsDrawer(context);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MapScreen()),
-                  );
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSettingsDrawer(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[850]?.withOpacity(0.95),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
+            ),
+          ),
+          child: Wrap(
+            children: [
+              SwitchListTile(
+                title: Text('Fahrenheit', style: TextStyle(color: Colors.white)),
+                value: home,
+                onChanged: (bool value) {
+                  setState(() {
+                    home = value;
+                  });
+                  Navigator.pop(context);
                 },
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(_screens.length, (index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentIndex == index
-                          ? Colors.white
-                          : Color.fromARGB(255, 83, 83, 83),
-                    ),
-                  );
-                }),
+              SwitchListTile(
+                title: Text('Celsius', style: TextStyle(color: Colors.white)),
+                value: lockScreen,
+                onChanged: (bool value) {
+                  setState(() {
+                    lockScreen = value;
+                  });
+                  Navigator.pop(context);
+                },
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  // Handle settings button press
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsScreen()),
-                  );
+              // More toggles can be added here
+              ListTile(
+                title: Text('Logout', style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showLogoutConfirmationDialog(context);
                 },
               ),
             ],
           ),
-        ),
-        color: Colors.blueGrey.withOpacity(0.9),
-        shape: CircularNotchedRectangle(),
-      ),
+        );
+      },
+    );
+  }
+
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Logout'),
+          content: Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel', style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Perform logout actions
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: Text('Logout', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
   }
 

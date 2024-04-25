@@ -1,4 +1,5 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
+<<<<<<< HEAD
 
 import 'dart:async';
 
@@ -143,11 +144,23 @@ class _ThirdScreenState extends State<ThirdScreen> {
       default:
         return 'assets/sunnycloudy.json';
     }
+=======
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+class ThirdScreen extends StatelessWidget {
+  // Determine background image based on time of day
+  String getBackgroundImage() {
+    var hour = DateTime.now().hour;
+    return hour >= 6 && hour < 18 ? 'assets/images/background.png' : 'assets/images/background2.png';
+>>>>>>> main
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return Scaffold(
+<<<<<<< HEAD
       appBar: AppBar(
         title: Text('Storm.lyy: $_savedCityNameTwo'),
       ),
@@ -212,11 +225,25 @@ class _ThirdScreenState extends State<ThirdScreen> {
             // 5 day forecast
             Text(
               "This week's weather phenomenon",
+=======
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset(
+            getBackgroundImage(),
+            fit: BoxFit.cover,
+          ),
+          Center(
+            child: Text(
+              'Welcome to the Third Screen!',
+>>>>>>> main
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
+<<<<<<< HEAD
             // Display Hourly Weather Forecast Graph
             _buildDecoratedWidget(
               _buildHourlyWeatherForecastGraph(),
@@ -224,6 +251,10 @@ class _ThirdScreenState extends State<ThirdScreen> {
             ),
           ],
         ),
+=======
+          ),
+        ],
+>>>>>>> main
       ),
     );
   }

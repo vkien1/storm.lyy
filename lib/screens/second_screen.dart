@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stormly/consts.dart';
@@ -145,9 +146,23 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
+=======
+import 'package:flutter/services.dart';
+
+class SecondScreen extends StatelessWidget {
+  // Determine background image based on time of day
+  String getBackgroundImage() {
+    var hour = DateTime.now().hour;
+    return hour >= 6 && hour < 18 ? 'assets/images/background.png' : 'assets/images/background2.png';
+  }
+
+>>>>>>> main
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return Scaffold(
+<<<<<<< HEAD
       appBar: AppBar(
         title: Text('Storm.lyy: $_savedCityNameOne'),
       ),
@@ -212,11 +227,25 @@ class _SecondScreenState extends State<SecondScreen> {
             // 5 day forecast
             Text(
               "This week's weather phenomenon",
+=======
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset(
+            getBackgroundImage(),
+            fit: BoxFit.cover,
+          ),
+          Center(
+            child: Text(
+              'Welcome to the Second Screen!',
+>>>>>>> main
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
+<<<<<<< HEAD
             // Display Hourly Weather Forecast Graph
             _buildDecoratedWidget(
               _buildHourlyWeatherForecastGraph(),
@@ -224,6 +253,10 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
           ],
         ),
+=======
+          ),
+        ],
+>>>>>>> main
       ),
     );
   }

@@ -6,7 +6,6 @@ import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'widgets/theme_provider.dart';
 //screens
-import 'package:stormly/screens/settings_screen.dart';
 import 'widgets/swipe_navigation_screen.dart';
 import 'screens/login_screen.dart';
 import 'package:stormly/screens/second_screen.dart';
@@ -16,7 +15,7 @@ import 'package:stormly/screens/map_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
+  await Firebase.initializeApp( // ensures that flutter is initialized for the app
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());
@@ -57,17 +56,16 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'Flutter Task Manager',
+            title: 'Weather App!', // title of app.  
             theme: themeProvider.getTheme,
             initialRoute: '/',
-            routes: {
+            routes: { // defines the routes for the app navigation
               '/': (context) => LoginScreen(),
               '/homepage': (context) => SwipeNavigationScreen(),
               '/login': (context) => LoginScreen(),
               '/second': (context) => SecondScreen(),
               '/third': (context) => ThirdScreen(),
               '/map': (context) => MapScreen(),
-              '/setting': (context) => SettingsScreen(),
             },
           );
         },

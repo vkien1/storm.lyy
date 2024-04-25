@@ -14,25 +14,25 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen> {
-  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
-  final WeatherFactory _weatherFactory = WeatherFactory("86c7a0641be5b0591c1c8f1bd926055d");
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>(); 
+  final WeatherFactory _weatherFactory = WeatherFactory("86c7a0641be5b0591c1c8f1bd926055d"); // Factory to fetch weather data
   Set<Marker> _markers = {};
   Set<TileOverlay> _tileOverlays = {};
-  MapType _currentMapType = MapType.normal;
-  String? _currentWeatherOverlay;
+  MapType _currentMapType = MapType.normal;  // Current type of map displayed
+  String? _currentWeatherOverlay; // Current weather overlay (none)
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(33.7490, -84.3877),
-    zoom: 6,
+  static const CameraPosition _kGooglePlex = CameraPosition( 
+    target: LatLng(33.7490, -84.3877), // Default camera position (centered around GA.)
+    zoom: 6, // Adjust default zoom of map.
   );
 
   @override
   void initState() {
     super.initState();
-    _addTemperatureMarkers(); 
+    _addTemperatureMarkers();  // Call method for the markers you see
   }
 
-  Future<void> _addTemperatureMarker(double lat, double lon) async {
+  Future<void> _addTemperatureMarker(double lat, double lon) async {  // Method for markers
     Weather weather = await _weatherFactory.currentWeatherByLocation(lat, lon);
     final marker = Marker(
       markerId: MarkerId('${lat}_${lon}'),
@@ -44,10 +44,10 @@ class MapScreenState extends State<MapScreen> {
     );
 
     setState(() {
-      _markers.add(marker);
+      _markers.add(marker); // Adds the new marker to the set
     });
   }
-
+  // Adds multiple markers for different locations
   void _addTemperatureMarkers() {
     _addTemperatureMarker(33.7490, -84.3877); // Atlanta, GA
     _addTemperatureMarker(27.6648, -81.5158); // Florida
@@ -57,12 +57,12 @@ class MapScreenState extends State<MapScreen> {
   }
 
   void _updateWeatherOverlay(String? overlayType) {
-    setState(() {
-      _tileOverlays.clear(); 
+    setState(() { 
+      _tileOverlays.clear(); // Clears existing overlays
       if (overlayType != null) {
         final tileOverlay = TileOverlay(
           tileOverlayId: TileOverlayId('weather_overlay_$overlayType'),
-          tileProvider: ForecastTileProvider(
+          tileProvider: ForecastTileProvider( // Provides tile overlays based on weather type
             mapType: overlayType,
             dateTime: DateTime.now(),
             opacity: 0.8,
@@ -73,6 +73,7 @@ class MapScreenState extends State<MapScreen> {
     });
   }
 
+// Widget to select different weather overlays 
   Widget _buildWeatherOverlaySelector() {
     return Positioned(
       top: 110.0,
@@ -88,6 +89,7 @@ class MapScreenState extends State<MapScreen> {
           child: DropdownButton<String?>(
             value: _currentWeatherOverlay,
             hint: Text("Weather Overlay"),
+            // Options for some weather overlays
             items: [
               DropdownMenuItem(value: "PR0", child: Text("Rain")),
               DropdownMenuItem(value: "CL", child: Text("Clouds")),
@@ -96,8 +98,8 @@ class MapScreenState extends State<MapScreen> {
             ],
             onChanged: (value) {
               setState(() {
-                _currentWeatherOverlay = value;
-                _updateWeatherOverlay(value);
+                _currentWeatherOverlay = value; 
+                _updateWeatherOverlay(value); // Updates the map overlay based on selection
               });
             },
           ),
@@ -106,7 +108,7 @@ class MapScreenState extends State<MapScreen> {
     );
   }
 
-  // cylce from normal, satellitle and hybrid map layot
+  // Cylce from normal, satellitle and hybrid map layout
   Widget _buildMapTypeSelector() {
     return Positioned(
       top: 50.0,
@@ -122,6 +124,7 @@ class MapScreenState extends State<MapScreen> {
           child: DropdownButton<MapType>(
             value: _currentMapType,
             icon: Icon(Icons.arrow_drop_down),
+            // Options for MapTypes.
             items: [
               DropdownMenuItem(value: MapType.normal, child: Text("Normal")),
               DropdownMenuItem(value: MapType.satellite, child: Text("Satellite")),
@@ -130,7 +133,7 @@ class MapScreenState extends State<MapScreen> {
             onChanged: (MapType? type) {
               if (type != null) {
                 setState(() {
-                  _currentMapType = type;
+                  _currentMapType = type; // Sets new map type
                 });
               }
             },
@@ -149,13 +152,13 @@ class MapScreenState extends State<MapScreen> {
             mapType: _currentMapType,
             initialCameraPosition: _kGooglePlex,
             onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
+              _controller.complete(controller); // Completes the controller with GoogleMap controller
             },
             markers: _markers,
             tileOverlays: _tileOverlays,
           ),
-          _buildMapTypeSelector(),
-          _buildWeatherOverlaySelector(),
+          _buildMapTypeSelector(), // Adds selector for map types
+          _buildWeatherOverlaySelector(), // Adds selector for weather overlays
           Positioned(
             top: 60,
             left: 10,
