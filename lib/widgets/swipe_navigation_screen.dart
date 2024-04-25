@@ -1,3 +1,6 @@
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui'; // Required for ImageFilter
@@ -9,12 +12,14 @@ import 'package:stormly/screens/map_screen.dart';
 // import 'package:stormly/screens/settings_screen.dart'; // This import is no longer needed.
 
 class SwipeNavigationScreen extends StatefulWidget {
+  const SwipeNavigationScreen({super.key});
+
   @override
   _SwipeNavigationScreenState createState() => _SwipeNavigationScreenState();
 }
 
 class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentIndex = 0;
 
   // State variables for toggles.
@@ -55,7 +60,8 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
                 height: kToolbarHeight,
                 color: Colors.grey[900]?.withOpacity(0.5),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 2.0, horizontal: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -64,7 +70,8 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => MapScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => MapScreen()),
                           );
                         },
                       ),
@@ -117,7 +124,8 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
           child: Wrap(
             children: [
               SwitchListTile(
-                title: Text('Fahrenheit', style: TextStyle(color: Colors.white)),
+                title:
+                    Text('Fahrenheit', style: TextStyle(color: Colors.white)),
                 value: home,
                 onChanged: (bool value) {
                   setState(() {
@@ -167,6 +175,7 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
               onPressed: () async {
                 // Perform logout actions
                 Navigator.of(context).pop(); // Close dialog
+                _handleLogout(context); // Call the logout method
               },
               child: Text('Logout', style: TextStyle(color: Colors.red)),
             ),
@@ -174,6 +183,17 @@ class _SwipeNavigationScreenState extends State<SwipeNavigationScreen> {
         );
       },
     );
+  }
+
+  void _handleLogout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacementNamed(context,
+          '/login'); // Replace '/login' with the route to your login screen
+    } catch (e) {
+      print("Error logging out: $e");
+      // Handle error, if any
+    }
   }
 
   @override
