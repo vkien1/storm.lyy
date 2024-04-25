@@ -92,21 +92,16 @@ class _HomeScreenState extends State<HomeScreen> {
       // Extract relevant information
       int timestamp = item['dt'];
       double temperature = item['main']['temp'];
-      // double feelsLike = item['main']['feels_like'];
-      // double tempMin = item['main']['temp_min'];
-      // double tempMax = item['main']['temp_max'];
-      // int humidity = item['main']['humidity'];
       String mainCondition = item['weather'][0]['main'];
 
-      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 100);
 
       // Create a MyWeather object and add it to the forecast list
       MyWeather weather = MyWeather(
         time: dateTime,
         temperature: temperature,
-        // feelsLike: feelsLike,
-
-        mainCondition: mainCondition, cityName: '',
+        mainCondition: mainCondition,
+        cityName: '',
       );
       forecastList.add(weather);
     }
@@ -306,13 +301,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
+                                    // Implement assets for weather animations from lollite
                                     SizedBox(height: 10),
-                                    _buildWeatherIcon(
-                                        weather.mainCondition ?? ""),
+                                    _buildWeatherIcon(weather.mainCondition),
                                     SizedBox(height: 10),
                                     Text(
                                       // Assuming weather.temperature is the temperature of the forecast
-                                      '${weather.temperature}°C',
+                                      '${weather.temperature - 273.15}°C',
                                       style: TextStyle(
                                         fontSize: 16,
                                       ),
@@ -355,65 +350,5 @@ class _HomeScreenState extends State<HomeScreen> {
   // Get weather icon based on phenomenon
   IconData getWeatherIcon(String phenomenon) {
     return Icons.wb_sunny; // Placeholder icon
-  }
-
-  // Widget for hourly weather forecast graph
-  Widget _buildWForecast(List<MyWeather>? forecast) {
-    if (forecast == null || forecast.isEmpty) {
-      return Container(); // Return empty container if forecast is null or empty
-    }
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: forecast.length,
-      itemBuilder: (BuildContext context, int index) {
-        MyWeather weather = forecast[index];
-        return Container(
-          width: 120, // Adjust the width of each forecast box
-          margin: EdgeInsets.symmetric(horizontal: 5),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 3,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                // Assuming weather.time is the time of the forecast
-                '${weather.time}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-              // You need to replace 'Icon()' with the appropriate widget for weather icons
-              Icon(
-                getWeatherIcon(
-                    weather.mainCondition), // Use weather condition for icon
-                size: 40,
-                color: Colors.blue,
-              ),
-              SizedBox(height: 10),
-              Text(
-                // Assuming weather.temperature is the temperature of the forecast
-                '${weather.temperature}°C',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }
