@@ -65,8 +65,10 @@ class MyApp extends StatelessWidget {
               '/': (context) => LoginScreen(),
               '/homepage': (context) => SwipeNavigationScreen(),
               '/login': (context) => LoginScreen(),
-              '/second': (context) => SecondScreen(),
-              '/third': (context) => ThirdScreen(),
+              '/second': (context) => SecondScreen(
+                    cityName: '',
+                  ),
+              '/third': (context) => ThirdScreen(cityName1: ''),
               '/map': (context) => MapScreen(),
             },
           );

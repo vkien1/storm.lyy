@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_constructors_in_immutables
 
 import 'dart:async';
 
@@ -14,6 +14,13 @@ import 'package:stormly/models/weather_model.dart';
 import 'package:stormly/service/weather_service.dart';
 
 class SecondScreen extends StatefulWidget {
+  final String
+      cityName; // Add cityName as a parameter to the SecondScreen constructor
+
+  SecondScreen(
+      {super.key,
+      required this.cityName}); // Constructor with required parameter
+
   @override
   State<SecondScreen> createState() => _SecondScreenState();
 }
@@ -21,19 +28,19 @@ class SecondScreen extends StatefulWidget {
 class _SecondScreenState extends State<SecondScreen> {
   // import api key from conts from lib
   final _weatherSevice = WeatherService(OPENWEATHER_API_KEY);
+  final TextEditingController _cityController = TextEditingController();
   MyWeather? _weather;
-  TextEditingController _cityController = TextEditingController();
-  String _savedCityNameOne = '';
+  // String _cityName = _cityName;
   bool _isLoading = true;
 
   Position? _currentPosition;
 
-  // int _currentPageIndex = 0;
-  // void _setPageIndex(int index) {
-  //   setState(() {
-  //     _currentPageIndex = index;
-  //   });
-  // }
+  int _currentPageIndex = 0;
+  void _setPageIndex(int index) {
+    setState(() {
+      _currentPageIndex = index;
+    });
+  }
 
   @override
   void initState() {
@@ -41,19 +48,14 @@ class _SecondScreenState extends State<SecondScreen> {
 
     // inital state of weather fetch
     _loadWeatherData();
-
-    // _getCurrentLocation
-    // _fetchWeather();
   }
 
   void _loadWeatherData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedCity = prefs.getString('savedCity');
     if (savedCity != null) {
-      setState(() {
-        _savedCityNameOne = savedCity;
-      });
       _fetchWeatherByCity(savedCity);
+      _cityController.text = savedCity;
     }
   }
 
@@ -71,23 +73,6 @@ class _SecondScreenState extends State<SecondScreen> {
   // }
 
   // fetch weather
-  Future<void> _fetchWeather(double latitude, double longitude) async {
-    //TODO modify to set current city instead of retriving what city we are at
-    String cityName = await _weatherSevice.getCurrentCity();
-
-    // get weather
-    try {
-      final weather =
-          await _weatherSevice.getWeatherByLocation(latitude, longitude);
-      setState(() {
-        _weather = weather;
-      });
-    }
-    // error catcher casue ill know ill mess up lol , like alawys
-    catch (e) {
-      print(e);
-    }
-  }
 
   Future<void> _fetchWeatherByCity(String cityName) async {
     setState(() {
@@ -105,11 +90,10 @@ class _SecondScreenState extends State<SecondScreen> {
       prefs.setString('savedCity', cityName);
     } catch (e) {
       print(e);
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _savedCityNameOne = cityName;
-      _isLoading = false;
-    });
   }
 
   //weather animations
@@ -160,7 +144,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Storm.lyy: $_savedCityNameOne'),
+        title: Text('Storm.lyy: ${widget.cityName}'),
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -227,20 +211,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             ),
                             ThemeData(),
                           )
-                        : Container(), // Weather Details
-                // 5 day forecast
-                // Text(
-                //   "This week's weather phenomenon",
-                //   style: TextStyle(
-                //     fontSize: 24,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
-                // Display Hourly Weather Forecast Graph
-                // _buildDecoratedWidget(
-                //   _buildHourlyWeatherForecastGraph(),
-                //   ThemeData(),
-                // ),
+                        : Container(),
               ],
             ),
           ),
