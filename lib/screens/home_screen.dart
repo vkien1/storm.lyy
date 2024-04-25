@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (_currentPosition != null) {
       double lat = _currentPosition!.latitude;
-      double lon = _currentPosition!.latitude;
+      double lon = _currentPosition!.longitude;
 
       try {
         final forecast = await _weatherService.get5DayForecast(lat, lon);
@@ -79,6 +79,39 @@ class _HomeScreenState extends State<HomeScreen> {
         print(e);
       }
     }
+  }
+
+  List<MyWeather> _parseForecast(dynamic forecastData) {
+    List<MyWeather> forecastList = [];
+
+    // Extract forecast list from JSON data
+    List<dynamic> forecastItems = forecastData['list'];
+
+    // Iterate through each forecast item
+    for (var item in forecastItems) {
+      // Extract relevant information
+      int timestamp = item['dt'];
+      double temperature = item['main']['temp'];
+      // double feelsLike = item['main']['feels_like'];
+      // double tempMin = item['main']['temp_min'];
+      // double tempMax = item['main']['temp_max'];
+      // int humidity = item['main']['humidity'];
+      String mainCondition = item['weather'][0]['main'];
+
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+
+      // Create a MyWeather object and add it to the forecast list
+      MyWeather weather = MyWeather(
+        time: dateTime,
+        temperature: temperature,
+        // feelsLike: feelsLike,
+
+        mainCondition: mainCondition, cityName: '',
+      );
+      forecastList.add(weather);
+    }
+
+    return forecastList;
   }
 
   // Get weather animation based on condition
@@ -115,6 +148,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return hour >= 6 && hour < 18
         ? 'assets/images/background.png'
         : 'assets/images/background2.png';
+  }
+
+  // TEMP assets
+  // Add this method to handle the weather icon based on the condition
+  Widget _buildWeatherIcon(String condition) {
+    return Icon(
+      getWeatherIcon(condition),
+      size: 40,
+      color: Colors.blue,
+    );
   }
 
   @override
@@ -227,7 +270,60 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 // Hourly Weather Forecast Graph
                 _buildDecoratedWidget(
-                  _buildWForecast(_forecast),
+                  _forecast != null
+                      ? Container(
+                          height: 150,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _forecast!.length,
+                            itemBuilder: (context, index) {
+                              final weather = _forecast![index];
+                              return Container(
+                                width:
+                                    120, // Adjust the width of each forecast box
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      // Assuming weather.time is the time of the forecast
+                                      '${weather.time}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    _buildWeatherIcon(
+                                        weather.mainCondition ?? ""),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      // Assuming weather.temperature is the temperature of the forecast
+                                      '${weather.temperature}°C',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : CircularProgressIndicator(), // Show loading indicator if forecast is null
                   ThemeData(),
                 ),
               ],
@@ -301,8 +397,8 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 10),
               // You need to replace 'Icon()' with the appropriate widget for weather icons
               Icon(
-                getWeatherIcon(weather.mainCondition ??
-                    ""), // Use weather condition for icon
+                getWeatherIcon(
+                    weather.mainCondition), // Use weather condition for icon
                 size: 40,
                 color: Colors.blue,
               ),
