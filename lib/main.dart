@@ -68,7 +68,6 @@ class MyApp extends StatelessWidget {
               '/second': (context) => SecondScreen(),
               '/third': (context) => ThirdScreen(),
               '/map': (context) => MapScreen(),
-              // '/setting': (context) => SettingsScreen(),
             },
           );
         },

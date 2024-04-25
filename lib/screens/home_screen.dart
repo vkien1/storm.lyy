@@ -17,6 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // import api key from consts from lib
   final _weatherService = WeatherService(OPENWEATHER_API_KEY);
   MyWeather? _weather;
+  List<MyWeather>? _forecast;
+
   int _currentPageIndex = 0;
   Position? _currentPosition;
 
@@ -60,6 +62,22 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (e) {
       print(e);
+    }
+
+    if (_currentPosition != null) {
+      double lat = _currentPosition!.latitude;
+      double lon = _currentPosition!.latitude;
+
+      try {
+        final forecast = await _weatherService.get5DayForecast(lat, lon);
+        //Handle forecast data
+        setState(() {
+          // Pass the forecast data to _buildWForecast
+          _forecast = _parseForecast(forecast); // Add this line
+        });
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
@@ -182,9 +200,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   ThemeData(),
                 ),
+                // Add the provided text widgets here
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '5Day ',
+                        style: GoogleFonts.permanentMarker(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(
+                              255, 53, 53, 53), // Set "My" to dark blue
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'Forecast',
+                        style: GoogleFonts.permanentMarker(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(
+                              255, 140, 140, 140), // Set "Location" to white
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 // Hourly Weather Forecast Graph
                 _buildDecoratedWidget(
-                  _buildHourlyWeatherForecastGraph(),
+                  _buildWForecast(_forecast),
                   ThemeData(),
                 ),
               ],
@@ -219,19 +262,62 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Widget for hourly weather forecast graph
-  Widget _buildHourlyWeatherForecastGraph() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      height: 150, // Adjust the height as needed
-      color: Colors.white.withAlpha(200), // Slightly transparent white color
-      child: Center(
-        child: Text(
-          'Hourly Forecast Graph Placeholder',
-          style: TextStyle(
-            color: Colors.black,
+  Widget _buildWForecast(List<MyWeather>? forecast) {
+    if (forecast == null || forecast.isEmpty) {
+      return Container(); // Return empty container if forecast is null or empty
+    }
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: forecast.length,
+      itemBuilder: (BuildContext context, int index) {
+        MyWeather weather = forecast[index];
+        return Container(
+          width: 120, // Adjust the width of each forecast box
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: Offset(0, 2),
+              ),
+            ],
           ),
-        ),
-      ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                // Assuming weather.time is the time of the forecast
+                '${weather.time}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              // You need to replace 'Icon()' with the appropriate widget for weather icons
+              Icon(
+                getWeatherIcon(weather.mainCondition ??
+                    ""), // Use weather condition for icon
+                size: 40,
+                color: Colors.blue,
+              ),
+              SizedBox(height: 10),
+              Text(
+                // Assuming weather.temperature is the temperature of the forecast
+                '${weather.temperature}°C',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
