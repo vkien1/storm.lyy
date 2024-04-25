@@ -15,7 +15,8 @@ import 'package:stormly/screens/map_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp( // ensures that flutter is initialized for the app
+  await Firebase.initializeApp(
+    // ensures that flutter is initialized for the app
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());
@@ -56,10 +57,11 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'Weather App!', // title of app.  
+            title: 'Weather App!', // title of app.
             theme: themeProvider.getTheme,
             initialRoute: '/',
-            routes: { // defines the routes for the app navigation
+            routes: {
+              // defines the routes for the app navigation
               '/': (context) => LoginScreen(),
               '/homepage': (context) => SwipeNavigationScreen(),
               '/login': (context) => LoginScreen(),
