@@ -36,6 +36,34 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchWeather();
   }
 
+  // Get weather animation based on condition
+  String getWeatherAnimation(String? mainCondition) {
+    if (mainCondition == null) return 'assets/sunny.json';
+    switch (mainCondition.toLowerCase()) {
+      case 'clouds':
+        return 'assets/sunnycloudy.json';
+      case 'mist':
+      case 'smoke':
+      case 'haze':
+      case 'dust':
+        return 'assets/windy.json';
+      case 'fog':
+        return 'assets/cloudy(night).json';
+      case 'rain':
+        return 'assets/storm&showers(day).json';
+      case 'drizzle':
+        return 'assets/rainy(night).json';
+      case 'shower rain':
+        return 'assets/partlyshower.json';
+      case 'thunderstorm':
+        return 'assets/storm&showers(day).json';
+      case 'clear':
+        return 'assets/sunnylightcloudy.json';
+      default:
+        return 'assets/sunnycloudy.json';
+    }
+  }
+
   // Get current location
   Future<void> _getCurrentLocation() async {
     try {
@@ -93,13 +121,21 @@ class _HomeScreenState extends State<HomeScreen> {
       int timestamp = item['dt'];
       double temperature = item['main']['temp'];
       String mainCondition = item['weather'][0]['main'];
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 
-      DateTime dateTime =
-          DateTime.fromMillisecondsSinceEpoch(timestamp * 10000);
+      // Extract hourly time (format: HH:00)
+      String hourlyTime = '${dateTime.hour.toString().padLeft(2, '0')}:00';
+
+      // Extract current date and month (format: DD/MM)
+      String dateMonth =
+          '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}';
+
+      // Combine hourly time and date/month into a single string
+      String formattedTime = '$hourlyTime, $dateMonth';
 
       // Create a MyWeather object and add it to the forecast list
       MyWeather weather = MyWeather(
-        time: dateTime,
+        time: formattedTime,
         temperature: temperature,
         mainCondition: mainCondition,
         cityName: '',
@@ -110,33 +146,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return forecastList;
   }
 
-  // Get weather animation based on condition
-  String getWeatherAnimation(String? mainCondition) {
-    if (mainCondition == null) return 'assets/sunny.json';
-    switch (mainCondition.toLowerCase()) {
-      case 'clouds':
-        return 'assets/sunnycloudy.json';
-      case 'mist':
-      case 'smoke':
-      case 'haze':
-      case 'dust':
-        return 'assets/windy.json';
-      case 'fog':
-        return 'assets/cloudy(night).json';
-      case 'rain':
-        return 'assets/storm&showers(day).json';
-      case 'drizzle':
-        return 'assets/rainy(night).json';
-      case 'shower rain':
-        return 'assets/partlyshower.json';
-      case 'thunderstorm':
-        return 'assets/storm&showers(day).json';
-      case 'clear':
-        return 'assets/sunnylightcloudy.json';
-      default:
-        return 'assets/sunnycloudy.json';
-    }
-  }
+  // String _formatTime(String timeString) {
+  //   // Parse the time string to DateTime object
+  //   DateTime dateTime = DateTime.parse(timeString);
+
+  //   // Extract hourly time (format: HH:00)
+  //   String hourlyTime = '${dateTime.hour.toString().padLeft(2, '0')}:00';
+
+  //   // Extract current date and month (format: DD/MM)
+  //   String dateMonth =
+  //       '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}';
+
+  //   return '$hourlyTime, $dateMonth';
+  // }
 
   // Determine background image based on time of day
   String getBackgroundImage() {
@@ -264,6 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
+
                 // Hourly Weather Forecast Graph
                 _buildDecoratedWidget(
                   _forecast != null
@@ -296,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Text(
                                       // Assuming weather.time is the time of the forecast
-                                      '${weather.time}',
+                                      weather.time,
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -307,8 +330,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     _buildWeatherIcon(weather.mainCondition),
                                     SizedBox(height: 10),
                                     Text(
-                                      // Assuming weather.temperature is the temperature of the forecast
-                                      '${weather.temperature - 273.15}°C',
+                                      // Assuming weather.temperature is the temperature of the forecast in Kelvin
+                                      '${(weather.temperature - 273.15).toStringAsFixed(2)}°C',
                                       style: TextStyle(
                                         fontSize: 16,
                                       ),

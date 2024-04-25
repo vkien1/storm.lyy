@@ -89,16 +89,24 @@ class WeatherService {
       int timestamp = item['dt'];
       double temperature = item['main']['temp'];
       String mainCondition = item['weather'][0]['main'];
-      DateTime dateTime =
-          DateTime.fromMillisecondsSinceEpoch(timestamp * 10000);
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+
+      // Extract hourly time (format: HH:00)
+      String hourlyTime = '${dateTime.hour.toString().padLeft(2, '0')}:00';
+
+      // Extract current date and month (format: DD/MM)
+      String dateMonth =
+          '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}';
+
+      // Combine hourly time and date/month into a single string
+      String formattedTime = '$hourlyTime, $dateMonth';
 
       // Create a MyWeather object and add it to the forecast list
       MyWeather weather = MyWeather(
-        time: dateTime,
+        time: formattedTime,
         temperature: temperature,
-        // feelsLike: feelsLike,
-
-        mainCondition: mainCondition, cityName: '',
+        mainCondition: mainCondition,
+        cityName: '',
       );
       forecastList.add(weather);
     }
