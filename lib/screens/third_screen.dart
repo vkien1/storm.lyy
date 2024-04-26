@@ -52,7 +52,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
   void _loadWeatherData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedCity = prefs.getString('savedCity');
+    String? savedCity = prefs.getString('savedCity3');
     if (savedCity != null) {
       _fetchWeatherByCity(savedCity);
       _cityController.text = savedCity;
@@ -87,7 +87,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
       // saved the city for future use
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('savedCity', cityName1);
+      prefs.setString('savedCity3', cityName1);
     } catch (e) {
       print(e);
       setState(() {

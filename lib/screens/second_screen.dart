@@ -52,7 +52,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void _loadWeatherData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedCity = prefs.getString('savedCity');
+    String? savedCity = prefs.getString('savedCity2');
     if (savedCity != null) {
       _fetchWeatherByCity(savedCity);
       _cityController.text = savedCity;
@@ -87,7 +87,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
       // saved the city for future use
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('savedCity', cityName);
+      prefs.setString('savedCity2', cityName);
     } catch (e) {
       print(e);
       setState(() {
